@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Camera with mediaDevice</title>
+</head>
+<body>
+
+	Firefox/Chrome Camera with mediaDevice.getUserMedia()<br />
+	<button onclick="startVideo()">Start</button>
+	<button onclick="stopVideo()">Stop</button>
+	<br />
+	<video id="myVideo" autoplay style="width: 640px; height: 480px; border: 1px solid black;"></video>
+
+	<canvas id="mycanvas"></canvas>
+	<input type="button" value="copy frame" onclick="copyFrame()" />
+
+
+</body>
+<script type="text/javascript">
+	let localVideo = document.getElementById('myVideo');
+	let localStream;
+
+	// start local video
+	function startVideo() {
+		navigator.mediaDevices.getUserMedia({video: true, audio: false})
+		.then(function (stream) { // success
+		  localStream = stream;
+		  localVideo.src = window.URL.createObjectURL(localStream);
+		}).catch(function (error) { // error
+		  console.error('mediaDevice.getUserMedia() error:', error);
+		  return;
+		});
+	}
+
+	// stop local video
+	function stopVideo() {
+		for (track of localStream.getTracks()) {
+		  track.stop();
+		}
+		localStream = null;
+
+		localVideo.pause();
+		window.URL.revokeObjectURL(localVideo.src);
+		localVideo.src = '';
+	}
+	function copyFrame() {
+	    var cEle = document.getElementById('mycanvas');
+	    var cCtx = cEle.getContext('2d');
+	    var vEle = document.getElementById('myVideo');
+
+	    cEle.width  = vEle.videoWidth;   
+	    cEle.height = vEle.videoHeight;
+
+	    cCtx.drawImage(vEle, 0, 0);  
+
+//		var imgdata = cCtx.getImageData(0, 0, vEle.videoWidth, vEle.videoHeight);
+//		for (var i=0; i<imgdata.data.length; i+=4) {  // imgdata.data: [R,G,B,alpha,R,G,B,alpha...]
+//		    var gray = (imgdata.data[i] + imgdata.data[i+1] + imgdata.data[i+2]) / 3;
+//		    imgdata.data[i] = imgdata.data[i+1] = imgdata.data[i+2] = gray;  // RGB
+//		    imgdata.data[i+3] = 255;  // alpha
+//		}
+//		cCtx.putImageData(imgdata, 0, 0);
+
+	}
+</script>
+</html>

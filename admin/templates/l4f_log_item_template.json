@@ -1,0 +1,217 @@
+{"<>":"div","id":"${LOG_ID}_${AUTH_SRC_ID}","class":"selector col-xs-4 col-sm-3 col-md-2","value":"${LOG_ID}","html":[
+	{"<>":"div","name":"chbox","html":[
+			{"<>":"input","id":"checked_${LOG_ID}_${AUTH_SRC_ID}","type":"checkbox","name":"check_${LOG_ID}","html":[
+    {"<>":"div","id":"_${LOG_ID}_${AUTH_SRC_ID}","class":"l4f__thumnail l4f__thumnail__link","html":[
+        {"<>":"div","class":"l4f__thumnail__img","html":[
+            {"<>":"img","src":"data:image/png;base64,${FACE_JPG_B64}","alt":"","html":[
+                {"<>":"span","class":"badge l4f__badge","html":"${RECOGNITION_COUNT}"}
+              ]}
+          ]},
+        {"<>":"div","class":"l4f__caption","html":[
+            {"<>":"span","class":"l4f__caption__line","html":"${PERSON_NAME}"},
+            {"<>":"span","class":"l4f__caption__line","html":"${FRAME_IMG_DATE}"}
+          ]}
+      ]},
+		{"<>":"div","id":"modal_box_${LOG_ID}_${AUTH_SRC_ID}","class":"col-sm-12 modal modal__wide  fade","tabindex":"-1","role":"dialog","html":[
+			{"<>":"div","class":"modal-dialog modal-lg","role":"document","html":[
+				{"<>":"div","class":"modal-content modal__wide","html":[
+					{"<>":"div","class":"modal-body","html":[
+
+                {"<>":"div","class":"col-xs-11 col-sm-4 l4f__thumnail__detail__img","html":[
+                    {"<>":"img","src":"data:image/png;base64,${FACE_JPG_B64}","alt":"","html":""}
+                  ]},
+                {"<>":"div","class":"col-xs-11 col-sm-7","html":[
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"PERSON_CODE"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${PERSON_CODE}"}
+                              ]}
+                          ]}
+                      ]},
+										{"<>":"form","class":"form-horizontal","html":[
+	                       {"<>":"div","class":"form-group form-group-sm","html":[
+	                           {"<>":"label","class":"control-label col-xs-4","html":"LOG_ID"},
+	                           {"<>":"div","class":"col-xs-5","html":[
+	                               {"<>":"p","class":"form-control-static","html":"${LOG_ID}"}
+	                             ]}
+	                         ]}
+	                     ]},
+										{"<>":"form","class":"form-horizontal","html":[
+	 	                     {"<>":"div","class":"form-group form-group-sm","html":[
+	 	                         {"<>":"label","class":"control-label col-xs-4","html":"FACE_NUMBER"},
+	 	                         {"<>":"div","class":"col-xs-5","html":[
+	 	                             {"<>":"p","class":"form-control-static","html":"${FACE_NUMBER}"}
+	 	                           ]}
+	 	                       ]}
+	 	                   ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"PERSON_NAME"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${PERSON_NAME}"}
+                              ]}
+                          ]}
+                      ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"NEAR_FACE_IMG_ID"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${NEAR_FACE_IMG_ID}"}
+                              ]}
+                          ]}
+                      ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"FRAME_KEY"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${FRAME_KEY}"}
+                              ]}
+                          ]}
+                      ]},
+									{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"AUTH_REQUEST"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${AUTH_REQUEST}"}
+	                            ]}
+	                        ]}
+	                    ]},
+									{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"AUTH_REQUEST_PRIORITY"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${AUTH_REQUEST_PRIORITY}"}
+	                            ]}
+	                        ]}
+	                    ]},
+									{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"TRAINING_REQUEST"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${TRAINING_REQUEST}"}
+	                            ]}
+	                        ]}
+	                    ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"FRAME_IMG_DATE"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${FRAME_IMG_DATE}"}
+                              ]}
+                          ]}
+                      ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"AUTH_SRC_ID"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${AUTH_SRC_ID}"}
+                              ]}
+                          ]}
+                      ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"RECOGNITION_CHECK"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${RECOGNITION_CHECK_RESULT}"}
+                              ]}
+                          ]}
+                      ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"MASK_CHECK_RESULT"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${MASK_CHECK_RESULT}"}
+                              ]}
+                          ]}
+                      ]},
+										{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"MASK_DEGREE"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${MASK_DEGREE}"}
+	                            ]}
+	                        ]}
+	                    ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"BOKEH_CHECK_RESULT"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${BOKEH_CHECK_RESULT}"}
+                              ]}
+                          ]}
+                      ]},
+									 	{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"BOKEH_DEGREE"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${BOKEH_DEGREE}"}
+	                            ]}
+	                        ]}
+	                    ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"LANDMARK_ACCURACY"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${LANDMARK_ACCURACY}"}
+                              ]}
+                          ]}
+                      ]},
+										{"<>":"form","class":"form-horizontal","html":[
+	                      {"<>":"div","class":"form-group form-group-sm","html":[
+	                          {"<>":"label","class":"control-label col-xs-4","html":"RECOGNITION_DISTANCE"},
+	                          {"<>":"div","class":"col-xs-5","html":[
+	                              {"<>":"p","class":"form-control-static","html":"${RECOGNITION_DISTANCE}"}
+	                            ]}
+	                        ]}
+	                    ]},
+                    {"<>":"form","class":"form-horizontal","html":[
+                        {"<>":"div","class":"form-group form-group-sm","html":[
+                            {"<>":"label","class":"control-label col-xs-4","html":"DETECTION_ACCURACY"},
+                            {"<>":"div","class":"col-xs-5","html":[
+                                {"<>":"p","class":"form-control-static","html":"${DETECTION_ACCURACY}"}
+                              ]}
+                          ]}
+                      ]},
+										{"<>":"form","class":"form-horizontal","html":[
+	                       {"<>":"div","class":"form-group form-group-sm","html":[
+	                           {"<>":"label","class":"control-label col-xs-4","html":"RECT_LEFT"},
+	                           {"<>":"div","class":"col-xs-5","html":[
+	                               {"<>":"p","class":"form-control-static","html":"${RECT_LEFT}"}
+	                             ]}
+	                         ]}
+	                     ]},
+				  					 {"<>":"form","class":"form-horizontal","html":[
+												 {"<>":"div","class":"form-group form-group-sm","html":[
+														 {"<>":"label","class":"control-label col-xs-4","html":"RECT_TOP"},
+														 {"<>":"div","class":"col-xs-5","html":[
+																 {"<>":"p","class":"form-control-static","html":"${RECT_TOP}"}
+															 ]}
+													 ]}
+												]},
+										{"<>":"form","class":"form-horizontal","html":[
+		                      {"<>":"div","class":"form-group form-group-sm","html":[
+		                          {"<>":"label","class":"control-label col-xs-4","html":"RECT_BOTTOM"},
+		                          {"<>":"div","class":"col-xs-5","html":[
+		                              {"<>":"p","class":"form-control-static","html":"${RECT_BOTTOM}"}
+		                            ]}
+		                        ]}
+		                    ]},
+										{"<>":"form","class":"form-horizontal","html":[
+		                      {"<>":"div","class":"form-group form-group-sm","html":[
+		                          {"<>":"label","class":"control-label col-xs-4","html":"RECT_RIGHT"},
+		                          {"<>":"div","class":"col-xs-5","html":[
+		                              {"<>":"p","class":"form-control-static","html":"${RECT_RIGHT}"}
+		                            ]}
+		                        ]}
+		                    ]}
+                  ]}
+              ]},{"<>":"div","class":"modal-footer","html":[
+                	{"<>":"button","type":"button","class":"btn btn-default","data-dismiss":"modal","html":"閉じる"}
+          	   ]}
+			]}
+		  ]}
+        ]}
+    ]}
+ ]}
+]}

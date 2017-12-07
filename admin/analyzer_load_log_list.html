@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Analyzer Load Log</title>
+	<link href="./css/l4f.css" rel="stylesheet">
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link href="./css/bootstrap-theme.min.css" rel="stylesheet">
+	<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.xdomainajax.js"></script>
+	<script type="text/javascript" src="./js/jquery.json2html.js"></script>
+	<script type="text/javascript" src="./js/json2html.js"></script>
+	<script type="text/javascript" src="./js/jquery.twbsPagination.min.js"></script>
+	<script src='./js/bootstrap.min.js'></script>
+	<script type="text/javascript" src="./js/jquery-ui.js"></script>
+	<script type="text/javascript" src="./js/moment.js"></script>
+	<script type="text/javascript" src="./js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript">
+		LOG_ITEM_TEMPLATE = "";
+		notselect = true;
+		PAGE_COUNT = 60;
+		offsetNow = 0;
+		//検索が完了したかどうか
+		search_complete = false;
+		//LOG_IDと配列を格納
+		var list = new Array();
+		//LOG_IDを格納
+		var list_logid =[];
+		//AUTH_SRC_IDを格納する配列
+		var list_authid = [];
+
+		$(function () {
+			$('#datetimepicker1').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+			$('#datetimepicker2').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+
+			// テンプレート読み込み
+			$.get("./templates/l4f_log_item_template.json", function (data) {
+				var data_str = JSON.stringify(data);
+				var data_obj = $.parseJSON(data_str);
+				LOG_ITEM_TEMPLATE = data_obj;
+			});
+
+			var surl = "/l4f/api.php";
+			$("#input_access_key").change(function () {
+				if (!localStorage) return;
+				localStorage.setItem("ACCESS_KEY", $(this).val());
+			});
+			if (localStorage) {
+				$("#input_access_key").val(localStorage.getItem("ACCESS_KEY"));
+			}
+
+			search_command = function (offset) {
+				search_result = function (result) {
+					var json_result = JSON.stringify(result);
+					var json_obj = $.parseJSON(json_result);
+					var body_html = json2html.transform(json_obj.RESULT, LOG_ITEM_TEMPLATE);
+					$('#result__area_rows').html(body_html);
+
+					//id(LOG_IDとAUTH_SRC_ID)を配列に格納する
+					list = [];
+
+
+					$('.template > div').each(function () {
+						id_num = $(this).attr('id');
+						list.push(id_num);
+					});
+
+					//listのLOG_IDとAUTH_SRC_IDを分割
+					list_logid = [];
+					list_authid = [];
+
+					for (var i in list) {
+						log_auth = list[i].split("_");
+						list_logid.push(log_auth[0]);
+						list_authid.push(log_auth[1]);
+					}
+
+					allCount = json_obj["RESULT_ALL_COUNT"];
+
+					//検索結果が0件だった場合は処理を終了
+					if(allCount == 0) {
+						alert("検索結果は0件です。");
+					} else {
+						pageCount = Math.ceil(allCount / PAGE_COUNT);
+
+						cOffset = (!offset || typeof offset=='object')? 1 : offset;
+						$('#pagination').twbsPagination({
+							totalPages: pageCount,
+							startPage: Math.ceil(cOffset/PAGE_COUNT),
+							initiateStartPageClick: false,
+							hideOnlyOnePage: true,
+							visiblePages: 10,
+							first: '<<',
+							prev: '<',
+							next: '>',
+							last: '>>',
+							onPageClick: function (evt,page) {
+								if(search_complete) {
+									search_complete = false;
+									offsetNow = (page - 1) * PAGE_COUNT;
+									search_command(offsetNow);
+								}
+							}
+						});
+						search_complete = true;
+					}
+				}
+				sjsonstr = {};
+				sjsonstr["CMD"] = "analyzer_load_log";
+				sjsonstr["ACCESS_KEY"] = $('#input_access_key').val();
+				sjsonstr["MSG"] = {};
+
+				if ($('#input_log_id').val()) {
+					sjsonstr["MSG"]["LOG_ID"] = Number($('#input_log_id').val());
+				}
+				if ($('#input_auth_src_id').val()) {
+					sjsonstr["MSG"]["AUTH_SRC_ID"] = $('#input_auth_src_id').val();
+				}
+				if ($('#input_frame_img_lt').val()) {
+					sjsonstr["MSG"]["FRAME_IMG_DATE_LT"] = $('#input_frame_img_lt').val();
+				}
+				if ($('#input_frame_img_gt').val()) {
+					sjsonstr["MSG"]["FRAME_IMG_DATE_GT"] = $('#input_frame_img_gt').val();
+				}
+				if ($('#input_person_name').val()) {
+					sjsonstr["MSG"]["PERSON_NAME"] = $('#input_person_name').val();
+				}
+				if ($('#input_near_face_img_id').val()) {
+					sjsonstr["MSG"]["NEAR_FACE_IMG_ID"] = Number($('#input_near_face_img_id').val());
+				}
+				if ($('#input_frame_key').val()) {
+					sjsonstr["MSG"]["FRAME_KEY"] = $('#input_frame_key').val();
+				}
+				if ($('#input_person_code').val()) {
+					sjsonstr["MSG"]["PERSON_CODE"] = $('#input_person_code').val();
+				}
+				if ($('#input_recognition_check_result').val()) {
+					sjsonstr["MSG"]["RECOGNITION_CHECK_RESULT"] = Number($('#input_recognition_check_result').val());
+				}
+				if ($('#input_bokeh_check_result').val()) {
+					sjsonstr["MSG"]["BOKEH_CHECK_RESULT"] = Number($('#input_bokeh_check_result').val());
+				}
+				if ($('#input_mask_check_result').val()) {
+					sjsonstr["MSG"]["MASK_CHECK_RESULT"] = Number($('#input_mask_check_result').val());
+				}
+				if ($('#input_auth_request').val()) {
+					sjsonstr["MSG"]["AUTH_REQUEST"] = Number($('#input_auth_request').val());
+				}
+				if ($('#input_training_request').val()) {
+					sjsonstr["MSG"]["TRAINING_REQUEST"] = Number($('#input_training_request').val());
+				}
+
+				sjsonstr["MSG"]["OFFSET"] = typeof offset == 'object' ? offsetNow : offset;
+				sjsonstr["MSG"]["COUNT"] = PAGE_COUNT;
+				sjsonstr["MSG"]["WITH_FACE_IMG"] = true;
+
+				sjsonstr = JSON.stringify(sjsonstr);
+				search_complete = false;
+				// 本検索検索
+				$.ajax({
+					type: "post",
+					url: surl,
+					data: sjsonstr,
+					dataType: "json",
+					scriptCharset: "utf-8"
+				}).done(search_result).fail(function (jqXHR, textStatus, errorThrown) {
+					alert("通信エラーが発生しました。\n Labellio Web APIと通信出来ているかご確認ください。")
+				});
+
+			};
+			$("#search").click(function() {
+				if($('#input_log_id').val() === "" &&
+					$('#input_auth_src_id').val() === "" &&
+					$('#input_frame_img_lt').val() === "" &&
+					$('#input_frame_img_gt').val() === "" &&
+					$('#input_person_name').val() === "" &&
+				 	$('#input_near_face_img_id').val() === "" &&
+					$('#input_frame_key').val() === "" &&
+				 	$('#input_person_code').val() === "" &&
+					$('#input_recognition_check_result').val() === "" &&
+					$('#input_bokeh_check_result').val() === "" &&
+					$('#input_mask_check_result').val() === "" &&
+					$('#input_auth_request').val() === "" &&
+					$('#input_training_request').val() === "") {
+					alert("検索条件を入力してください。");
+				} else {
+					search_complete = false;
+					//検索ボタンを押したときに、paginationを削除
+					$('#pagination').twbsPagination('destroy');
+					search_command();
+				}
+			});
+			// 検索結果クリア
+			$("#reset").click(function () {
+				$('#input_log_id').val("");
+				$('#input_auth_src_id').val("");
+				$('#input_frame_img_lt').val("");
+				$('#input_frame_img_gt').val("");
+				$('#input_person_name').val("");
+				$('#input_person_code').val("");
+				$('#input_frame_key').val("");
+				$('#input_near_face_img_id').val("");
+				$('#input_recognition_check_result').val("");
+				$('#input_bokeh_check_result').val("");
+				$('#input_auth_request').val("");
+				$('#input_mask_check_result').val("");
+				$('#input_training_request').val("");
+				$('#result__area_rows').html("");
+				$('#pagination').twbsPagination('destroy');
+				list = [];
+			});
+
+			$("#select_all").click( function () {
+				if(notselect) {
+					for(i = 0; i < list.length; i++) {
+						temp = "#checked_" + list[i];
+						if(!($(temp).prop('checked'))) {
+							$(temp).prop('checked', true);
+						}
+					}
+					notselect = false;
+				} else {
+					for(i = 0; i < list.length; i++) {
+						temp = "#checked_" + list[i];
+						if($(temp).prop('checked')) {
+							$(temp).prop('checked', false);
+						}
+					}
+					notselect = true;
+				}
+			});
+
+			// 削除
+			$("#delete").click(function () {
+				//削除するLOG_IDを格納する配列
+				del_list_logid = [];
+				//削除するAUTH_SRC_IDを格納する配列
+				del_list_authid = [];
+				//条件分岐前にLOG_IDを格納する配列
+				auth_id = [];
+
+
+				//チェックが入っているLOG_IDを検索
+				for (var i = 0; i < list.length; i++) {
+					temp = "#checked_" + list[i];
+					if ($(temp).prop('checked')) {
+						del_list_logid.push(list_logid[i]);
+						del_list_authid.push(list_authid[i]);
+					}
+				}
+				//del_list_authidの重複をなくす
+				unique_auth_id = del_list_authid.filter(function (value, index,array ) {
+				            return array.indexOf(value) === index;
+				})
+
+
+				for(i in del_list_authid) {
+					auth_id[del_list_authid[i]] = [];
+					for(j in del_list_logid) {
+						auth_id[del_list_authid[i]][j] = del_list_logid[i];
+					}
+				}
+				console.log(auth_id);
+
+				var res = confirm("チェックされている画像の解析ログの削除を行います。\nよろしいですか？");
+				if (res) {
+					//削除件数
+				del_number = 0;
+
+				str = unique_auth_id.toString();
+
+				for(i in unique_auth_id) {
+					for(j in auth_id[del_list_authid[i]]) {
+
+
+						djsonstr = {};
+						djsonstr["CMD"] = "analyzer_delete_log";
+						djsonstr["ACCESS_KEY"] = $('#input_access_key').val();
+						djsonstr["MSG"] = {};
+						djsonstr["MSG"]["LOG_ID_IN"] = del_list_logid;
+						djsonstr["MSG"]["AUTH_SRC_ID"] = str;
+
+						djsonstr = JSON.stringify(djsonstr);
+						console.log(djsonstr);
+
+						//削除件数の計算
+						del_number++;
+
+						search_complete = false;
+						$.ajax({
+							type: "post",
+							url: surl,
+							data: djsonstr,
+							dataType: "json",
+							scriptCharset: "utf-8"
+						}).done(function (result) {
+							$('#pagination').twbsPagination('destroy');
+							search_command(offsetNow);
+						}).fail(function (jqXHR, textStatus, errorThrown) {
+							alert("通信エラーが発生しました。\n Labellio Web APIと通信出来ているかご確認ください。")
+						});
+					}
+				}
+				alert(del_number + "件削除しました。");
+				}
+			});
+		}),
+
+			$(function () {
+				$('#search__title').click(function () {
+					if ($('#search__area').is(':visible')) {
+						$('#search__title').children('.arrow-up').removeClass('arrow-up').addClass('arrow-down');
+						$('#search__area').hide();
+						$('#hide_title').hide();
+					} else {
+						$('#search__title').children('.arrow-down').removeClass('arrow-down').addClass('arrow-up');
+						$('#search__area').show();
+						$('#hide_title').show();
+					}
+				});
+
+				$('#search__title__detail').click(function () {
+					if ($('#search__detail__area').is(':visible')) {
+						$('#search__title__detail').children('.arrow-up').removeClass('arrow-up').addClass('arrow-down');
+						$('#search__detail__area').hide();
+					} else {
+						$('#search__title__detail').children('.arrow-down').removeClass('arrow-down').addClass('arrow-up');
+						$('#search__detail__area').show();
+					}
+				});
+
+				$('#result__area').on('click', '.l4f__thumnail__link', function () {
+					var idname = $(this).attr("id");
+					var temp = "#modal_box" + idname;
+					$(temp).modal();
+				});
+			});
+
+
+	</script>
+</head>
+
+<body>
+	<header class="l4f__header">
+		<nav>
+			<ul>
+				<li class="l4f__hd__title">
+					<a href="#">Labellio for Face Admin</a>
+				</li>
+				<li class="l4f__hd__item">
+					<a href="./analyzer_load_log_list.html">Analyzer Load Log</a>
+				</li>
+				<li class="l4f__hd__item">
+					<a href="./learner_load_facedata_list.html">Load Face Data</a>
+				</li>
+				<li class="l4f__hd__item">
+					<a href="./learner_learning.html">Learning</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<div class="l4f__body">
+		<div class="container-fluid">
+			<div class="page__title" style="vertical-align:middle;">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<h4>
+							<strong>Analyzer Load Log</strong>
+						</h4>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<input type="text" class="form-control input-sm" id="input_access_key" placeholder="ACCESS KEY">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid" style="margin-top:10px;">
+			<div class="row">
+				<div class="col-md-4">
+					<div id="search__title" class="search__title">Search&nbsp;
+						<span class="arrow-up"></span>
+					</div>
+				</div>
+				<div id="hide_title" class="col-md-8">
+					<div id="search__title__detail" class="search__title__detail">More Detail&nbsp;
+						<span class="arrow-up"></span>
+					</div>
+				</div>
+				<form id="search__area">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<label class="control-label" align="center">LOG ID</label>
+							<input type="text" class="form-control input-sm" id="input_log_id" placeholder="LOG ID(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+						</div>
+						<div class="col-md-3">
+							<label class="control-label" align="center">FRAME IMG DATE(FROM)</label>
+							<div class="form-group">
+								<div class='input-group date' id='datetimepicker1'>
+									<input type='text' id="input_frame_img_gt" class="form-control" placeholder="FROM">
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="control-label" align="center">FRAME IMG DATE(TO)</label>
+								<div class='input-group date' id='datetimepicker2'>
+									<input type='text' id="input_frame_img_lt" class="form-control" placeholder="TO">
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<label class="control-label" align="center">AUTH SRC ID</label>
+							<input type="text" class="form-control input-sm" id="input_auth_src_id" placeholder="AUTH SRC ID">
+						</div>
+						<div class="col-md-2">
+							<label class="control-label" align="center">PERSON NAME</label>
+							<input type="text" class="form-control input-sm" id="input_person_name" placeholder="PERSON NAME">
+						</div>
+					</div>
+					<div id="search__detail__area">
+						<div class="col-xs-12" style="margin-top:5px;">
+							<div class="col-sm-3">
+								<label class="control-label" align="center">FRAME KEY</label>
+								<input type="text" class="form-control input-sm" id="input_frame_key" placeholder="FRAME KEY">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">PERSON CODE</label>
+								<input type="text" class="form-control input-sm" id="input_person_code" placeholder="PERSON CODE">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">NEAR FAME IMG ID</label>
+								<input type="text" class="form-control input-sm" id="input_near_face_img_id" placeholder="NEAR FACE IMG ID(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">RECOGNITION CHECK RESULT</label>
+								<input type="text" class="form-control input-sm" id="input_recognition_check_result" placeholder="RECOGNITION CHECK RESULT(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">BOKEH CHECK RESULT</label>
+								<input type="text" class="form-control input-sm" id="input_bokeh_check_result" placeholder="BOKEH CHECK RESULT(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">MASK CHECK RESULT</label>
+								<input type="text" class="form-control input-sm" id="input_mask_check_result" placeholder="MASK CHECK RESULT(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">AUTH REQUEST</label>
+								<input type="text" class="form-control input-sm" id="input_auth_request" placeholder="AUTH REQUEST(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+							<div class="col-sm-3">
+								<label class="control-label" align="center">TRAINING REQUEST</label>
+								<input type="text" class="form-control input-sm" id="input_training_request" placeholder="TRAINING REQUEST(Numbers Only)" onKeyup="this.value=this.value.replace(/[^0-9]+/i,'')">
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="col-xs-11" style="margin-left:15px;margin-top:5px;">
+					<a id="search" href="javascript:void(0);" class="l4f__button__sm">Search</a>
+					<a id="reset" href="javascript:void(0);" class="l4f__button__sm">Clear</a>
+					<a id="delete" class="l4f__button__sm">Delete</a>
+					<a id="select_all" href="javascript:void(0);" class="l4f__button__sm">Select All</a>
+				</div>
+			</div>
+		</div>
+		<div style="border-bottom: 1px solid #dddddd;padding:5px;"></div>
+
+		<!-- gallery -->
+		<div id="result__area" class="container-fluid" style="margin-top:10px;">
+			<ul id="pagination" class="pagination"></ul>
+			<div id="result__area_rows" class="template row row-eq-height"></div>
+		</div>
+	</div>
+
+	<footer class="l4f__footer">
+		<small>
+			&copy; 2017 KYOCERA Communication Systems Co., Ltd.
+		</small>
+	</footer>
+</body>
+
+</html>

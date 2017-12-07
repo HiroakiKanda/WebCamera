@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+	<title>Web Camera</title>
+</head>
+<body>
+
+<canvas id="mycanvas"></canvas>
+<input type="button" value="copy frame" onclick="copyFrame()" />
+<video id="myVideo" style="position:absolute;z-index:10;" autoplay="1" ></video>
+
+<script type="text/javascript">
+	function copyFrame() {
+	    var cEle = document.getElementById('mycanvas');
+	    var cCtx = cEle.getContext('2d');
+	    var vEle = document.getElementById('myVideo');
+
+	    cEle.width  = vEle.videoWidth;   // canvasの幅と高さを、動画の幅と高さに合わせる
+	    cEle.height = vEle.videoHeight;
+
+	    cCtx.drawImage(vEle, 0, 0);  // canvasに関数実行時の動画のフレームを描画
+
+		// ここから下を追加
+		var imgdata = cCtx.getImageData(0, 0, vEle.videoWidth, vEle.videoHeight);  // pixelデータを取得
+		for (var i=0; i<imgdata.data.length; i+=4) {  // imgdata.data: [R,G,B,alpha,R,G,B,alpha...]
+		    var gray = (imgdata.data[i] + imgdata.data[i+1] + imgdata.data[i+2]) / 3;  // グレースケール値計算
+		    imgdata.data[i] = imgdata.data[i+1] = imgdata.data[i+2] = gray;  // RGB
+		    imgdata.data[i+3] = 255;  // alpha
+		}
+		cCtx.putImageData(imgdata, 0, 0);  // 描画
+
+	}
+
+	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+	window.URL = window.URL || window.webkitURL;
+
+	var video = document.getElementById('myVideo');
+	var localStream = null;
+	navigator.getUserMedia({video: true, audio: false}, 
+		function(stream) { // for success case
+			console.log(stream);
+			video.src = window.URL.createObjectURL(stream);
+		},
+		function(err) { // for error case
+			console.log(err);
+	     }
+	);
+</script>
+
+</body>
+</html>

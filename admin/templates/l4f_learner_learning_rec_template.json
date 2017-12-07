@@ -1,0 +1,8 @@
+{"<>":"div","id":"${REC_NO}","class":"col-xs-4 col-sm-3 col-md-3","html":[
+    {"<>":"div","id":"_${REC_NO}","class":"l4f__thumnail l4f__thumnail__link","html":[
+        {"<>":"div","class":"l4f__thumnail__img","html":[
+            {"<>":"img","id":"rec_img_${REC_NO}","src":"data:image/png;base64,${FACE_JPG_B64}"},
+            {"<>":"input","id":"rec_no_${REC_NO}","type":"hidden","class":"rec_no_XX"}
+        ]}
+    ]}
+]}
