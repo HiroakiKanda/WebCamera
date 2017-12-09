@@ -13,13 +13,18 @@
 	<video id="myVideo" autoplay style="width: 640px; height: 480px; border: 1px solid black;"></video>
 
 	<canvas id="mycanvas"></canvas>
-	<input type="button" value="copy frame" onclick="copyFrame()" />
-
+	<BR>
+	<input type="button" value="Webカメラから画像" onclick="copyFrame()" />
+	<BR>
+	<textarea id="log" rows="10" cols="200" readonly></textarea>
 
 </body>
 <script type="text/javascript">
 	let localVideo = document.getElementById('myVideo');
 	let localStream;
+
+	// 初期化
+	document.getElementById('log').value = "";
 
 	// start local video
 	function startVideo() {
@@ -45,23 +50,34 @@
 		localVideo.src = '';
 	}
 	function copyFrame() {
-	    var cEle = document.getElementById('mycanvas');
-	    var cCtx = cEle.getContext('2d');
+		//img要素オブジェクトを取得する
 	    var vEle = document.getElementById('myVideo');
 
+		//canvas要素を生成してimg要素を反映する
+	    var cEle = document.getElementById('mycanvas');
 	    cEle.width  = vEle.videoWidth;   
 	    cEle.height = vEle.videoHeight;
-
+	    var cCtx = cEle.getContext('2d');
 	    cCtx.drawImage(vEle, 0, 0);  
 
-//		var imgdata = cCtx.getImageData(0, 0, vEle.videoWidth, vEle.videoHeight);
-//		for (var i=0; i<imgdata.data.length; i+=4) {  // imgdata.data: [R,G,B,alpha,R,G,B,alpha...]
-//		    var gray = (imgdata.data[i] + imgdata.data[i+1] + imgdata.data[i+2]) / 3;
-//		    imgdata.data[i] = imgdata.data[i+1] = imgdata.data[i+2] = gray;  // RGB
-//		    imgdata.data[i+3] = 255;  // alpha
-//		}
-//		cCtx.putImageData(imgdata, 0, 0);
+		document.getElementById('log').value = ImageToBase64(cEle, "image/jpeg");
 
+	}
+	//=====================================================
+	// <img>要素 → Base64形式の文字列に変換
+	//   img       : HTMLImageElement
+	//   mime_type : string "image/png", "image/jpeg" など
+	//=====================================================
+	function ImageToBase64(img, mime_type) {
+	    // New Canvas
+	    var canvas = document.createElement('canvas');
+	    canvas.width  = img.width;
+	    canvas.height = img.height;
+	    // Draw Image
+	    var ctx = canvas.getContext('2d');
+	    ctx.drawImage(img, 0, 0);
+	    // To Base64
+	    return canvas.toDataURL(mime_type);
 	}
 </script>
 </html>
