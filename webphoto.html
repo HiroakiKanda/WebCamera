@@ -6,15 +6,19 @@
 </head>
 <body>
 
+<form name="form">
 	<input type="file" id="selfile"><br>
 	<div id="bg"></div>
-	<textarea id="log" rows="10" cols="200" readonly></textarea>
+	<textarea id="base64" rows="10" cols="200"></textarea><br>
+	<input type="button" value="Base64から変換" onclick="dsp()">data:image/jpeg;base64,
+	<input type="button" value="クリア" onclick="clr()"><br>
 
+</form>
 </body>
 <script type="text/javascript">
 	var obj1 = document.getElementById("selfile");
 
-    document.getElementById("log").value = "";
+    document.getElementById("base64").value = "";
 
 	obj1.addEventListener("change", function(evt){
 	  var file = evt.target.files;
@@ -29,8 +33,11 @@
 
 	    //読み込んだ画像とdataURLを書き出す
 	    document.getElementById("bg").innerHTML = "<img src='" + dataUrl + "'>";
-	    document.getElementById("log").value = dataUrl;
+	    document.getElementById("base64").value = dataUrl;
 	  }
 	},false);
+
+function dsp() { bg.innerHTML='<img src="' + form.base64.value +'">'; }
+function clr() { bg.innerHTML='';base64.value='' }
 </script>
 </html>

@@ -56,7 +56,6 @@
     $res_json = json_decode($result , true );
     //echo $res_json['STATUS'];
 	echo $result;
-//      echo var_dump($res_json);
     curl_close($ch);
 
 ?>

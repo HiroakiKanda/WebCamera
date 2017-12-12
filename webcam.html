@@ -24,7 +24,7 @@
 	let localStream;
 
 	// 初期化
-	document.getElementById('log').value = "";
+	document.getElementById('log').value = '';
 
 	// start local video
 	function startVideo() {
@@ -59,6 +59,12 @@
 	    cEle.height = vEle.videoHeight;
 	    var cCtx = cEle.getContext('2d');
 	    cCtx.drawImage(vEle, 0, 0);  
+
+		// 線の色
+		cCtx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+		// 線の幅
+		cCtx.lineWidth = 5;
+		cCtx.strokeRect(10, 10, 200, 200)
 
 		document.getElementById('log').value = ImageToBase64(cEle, "image/jpeg");
 

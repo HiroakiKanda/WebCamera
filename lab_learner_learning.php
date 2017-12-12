@@ -2,51 +2,60 @@
 <html lang="ja">
 
 <head>
-    <meta charset="SHIFT-JIS">
+    <meta charset="UTF-8">
     <title>Labellio for Face WebAPI [ Lerning ]</title>
 </head>
 
 </head>
 <body style="margin: 0 0 0 0;">
+<button onclick="history.back()">Back</button>
 </body>
 
 <?php
 
-        $data = array(
-                'CMD'=>'learner_learning',
-                'ACCESS_KEY'=>'bc7e036e-f591-44a9-9cfd-3d4787e93dd3',
-                'MSG'=> array(
-                'FRAME_JPG_B64'=>
-'
-',
-				'PERSON_CODE'=>'',
-				'PERSON_NAME'=>''
-                ),
-        );
-        $data_json = json_encode($data);
-		echo "<BR> learner_learning<BR><BR>";
-//        echo $data_json;
+	echo "ACCESS KEY=".$_POST["accesskey"];
+	echo "<BR>";
+	echo "PERSON CODE=".$_POST["personcode"];
+	echo "<BR>";
+	echo "PERSON NAME=".$_POST["personname"];
+	echo "<BR>";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, 'https://54.199.181.249/l4f/api.php');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	$base64 = explode(",", $_POST["framejpgb64"]);
 
-// 社内からのアクセスはPROXY必要
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, 'http://10.254.30.228:8080');
+	$msg = array(
+        'FRAME_JPG_B64'=>$base64[1],
+		'PERSON_CODE'=>$_POST["personcode"],
+		'PERSON_NAME'=>$_POST["personname"]
+	);
 
-        $result=curl_exec($ch);
-        $res_json = json_decode($result , true );
-        //echo $res_json['STATUS'];
-		echo $result;
-  //      echo var_dump($res_json);
-        curl_close($ch);
+    $data = array(
+        'CMD'=>'learner_learning',
+        'ACCESS_KEY'=>$_POST["accesskey"],
+        'MSG'=>$msg
+    );
+
+    $data_json = json_encode($data);
+
+	echo "<BR> learner_learning<BR><BR>";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, 'https://54.199.181.249/l4f/api.php');
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+	// Proxy
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+	curl_setopt($ch, CURLOPT_PROXY, 'http://10.254.30.228:8080');
+
+    $result=curl_exec($ch);
+    $res_json = json_decode($result , true );
+	echo $result;
+    curl_close($ch);
 
 ?>
 

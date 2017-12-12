@@ -12,7 +12,7 @@
 
 	<input type="file" id="selfile"><br>
 	<div id="bg"></div>
-	<textarea id="log" name="framejpgb64" rows="10" cols="200" readonly></textarea>
+	<textarea id="base64" name="framejpgb64" rows="10" cols="200" readonly></textarea>
 <BR>
 	<input type="submit" value="検索"/>
 </form>
@@ -20,17 +20,17 @@
 <script type="text/javascript">
 	var obj1 = document.getElementById("selfile");
 
-    document.getElementById("log").value = "";
+	document.getElementById("base64").value = "";
 
 	obj1.addEventListener("change", function(evt){
-	  var file = evt.target.files;
-	  var reader = new FileReader();
-	  reader.readAsDataURL(file[0]);
-	  reader.onload = function(){
-	    var dataUrl = reader.result;
-	    document.getElementById("bg").innerHTML = "<img src='" + dataUrl + "'>";
-	    document.getElementById("log").value = dataUrl;
-	  }
+		var file = evt.target.files;
+		var reader = new FileReader();
+		reader.readAsDataURL(file[0]);
+		reader.onload = function(){
+			var dataUrl = reader.result;
+			document.getElementById("bg").innerHTML = "<img src='" + dataUrl + "'>";
+			document.getElementById("base64").value = dataUrl;
+		}
 	},false);
 </script>
 
